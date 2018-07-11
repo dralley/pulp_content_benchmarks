@@ -1,5 +1,5 @@
 """
-WSGI config for models_benchmark project.
+WSGI config for benchmark project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "models_benchmark.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "benchmark.settings")
 
 application = get_wsgi_application()
