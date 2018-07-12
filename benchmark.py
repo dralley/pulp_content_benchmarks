@@ -71,7 +71,7 @@ def main():
     end = time.time()
 
     diff = end - start
-    print('{num} units: indidvidual save in seconds: {diff}'.format(diff=diff, num=args.num))
+    print('{num} multi-table content: individual save in seconds: {diff}'.format(diff=diff, num=args.num))
 
 
     inherited_artifacts = get_new_artifacts_and_reset(args, InheritedArtifact)
@@ -84,7 +84,20 @@ def main():
     end = time.time()
 
     diff = end - start
-    print('{num} units: indidvidual save w/ transaction in seconds: {diff}'.format(diff=diff, num=args.num))
+    print('{num} multi-table content: individual save w/ transaction in seconds: {diff}'.format(diff=diff, num=args.num))
+
+
+    flat_artifacts = get_new_artifacts_and_reset(args, FlatArtifact)
+    flat_content = get_new_content_and_reset(FlatFileContent, flat_artifacts)
+
+    start = time.time()
+    with transaction.atomic():
+        for content in flat_content:
+            content.save()
+    end = time.time()
+
+    diff = end - start
+    print('{num} single-table content: individual save w/ transaction in seconds: {diff}'.format(diff=diff, num=args.num))
 
 
     flat_artifacts = get_new_artifacts_and_reset(args, FlatArtifact)
@@ -95,7 +108,7 @@ def main():
     end = time.time()
 
     diff = end - start
-    print('{num} units: bulk save in seconds: {diff}'.format(diff=diff, num=args.num))
+    print('{num} single-table content: bulk save in seconds: {diff}'.format(diff=diff, num=args.num))
 
 
     # flat_no_uuid_artifacts = get_new_artifacts_and_reset(args, FlatNoUUIDArtifact)

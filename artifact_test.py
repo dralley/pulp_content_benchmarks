@@ -2,9 +2,9 @@ import argparse
 import hashlib
 import time
 
-if __name__ == '__main__':
-    import django
-    django.setup()
+import django
+django.setup()
+from django.db import transaction
 
 from pulpcore.plugin.models import Artifact
 
@@ -35,6 +35,7 @@ def get_new_artifacts_and_reset(args):
 
 def main():
     args = parser.parse_args()
+
     artifacts = get_new_artifacts_and_reset(args)
     start = time.time()
     for artifact in artifacts:
@@ -42,7 +43,19 @@ def main():
     end = time.time()
 
     diff = end - start
-    print('{num} units: indidvidual save in seconds: {diff}'.format(diff=diff, num=args.num))
+    print('{num} artifacts: individual save in seconds: {diff}'.format(diff=diff, num=args.num))
+
+
+    artifacts = get_new_artifacts_and_reset(args)
+    start = time.time()
+    with transaction.atomic():
+        for artifact in artifacts:
+            artifact.save()
+    end = time.time()
+
+    diff = end - start
+    print('{num} artifacts: individual save w/ single transaction in seconds: {diff}'.format(diff=diff, num=args.num))
+
 
     artifacts = get_new_artifacts_and_reset(args)
     start = time.time()
@@ -50,7 +63,10 @@ def main():
     end = time.time()
 
     diff = end - start
-    print('{num} units: bulk save in seconds: {diff}'.format(diff=diff, num=args.num))
+    print('{num} artifacts: bulk save in seconds: {diff}'.format(diff=diff, num=args.num))
+
+    print()
+
 
 
 if __name__=='__main__':
