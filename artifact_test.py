@@ -6,7 +6,7 @@ import django
 django.setup()
 from django.db import transaction
 
-from pulpcore.plugin.models import Artifact
+from inherited.models import Artifact
 
 
 parser = argparse.ArgumentParser()
